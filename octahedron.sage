@@ -6,6 +6,10 @@ load("vertex_automorph_functions.sage")
 load("edge_equiv_classes.sage")
 load("edge.sage")
 load("vertex.sage")
+
+load("graph.sage")
+load("hypersimplex.sage")
+load("group_wrapper.sage")
 ##
 
 print("####################################")
@@ -16,13 +20,11 @@ v_list = [Vertex('A'),Vertex('B'), Vertex('C'), Vertex('D'), Vertex('E'), Vertex
 e_non_list = [Edge(Vertex('A'),Vertex('C')), Edge(Vertex('B'),Vertex('D')), Edge(Vertex('E'),Vertex('F'))]
 e_list = []
 
-print("Vertices:"),
-print(v_list)
+# facet_pair_list = [("ABE", "CDF"), ("BCE", "DAF"), ("CDE", "ABF"), ("DAE", "BCF")]
+# print("Facet pairs:"),
+# print(facet_pair_list)
 
-facet_pair_list = [("ABE", "CDF"), ("BCE", "DAF"), ("CDE", "ABF"), ("DAE", "BCF")]
-print("Facet pairs:"),
-print(facet_pair_list)
-
+# calculate edges
 v_list_hit = []
 for v in v_list:
     v_list_hit.append(v)
@@ -39,40 +41,44 @@ for v in v_list:
             continue
         e_list.append(e)
 
+
+print("Vertices:"),
+print(v_list)
 print("Edges:"),
 print(e_list)
+
+# graph = Graph(v_list, e_list)
+# print("Octahedron graph:")
+# print(graph)
+
+group_wrapper = GroupWrapper(SymmetricGroup(4))
+print(group_wrapper)
+print(group_wrapper.gens)
+print(len(group_wrapper))
+
+hypers = Hypersimplex(Graph(v_list, e_list))
+print(hypers)
 
 print("\n####################################")
 print("# Automorphism group               #")
 print("####################################\n")
 
 s2Perm = SymmetricGroup(2)
-sDimPerm = SymmetricGroup(4)
-print("Symmetric groups:")
+sDimPerm = GroupWrapper(SymmetricGroup(4), True)
+print("## Symmetric groups: ##")
 print(u"S\u2082:"),
 print(s2Perm)
 print(u"S\u2084:"),
 print(sDimPerm)
 
-def s4automor(g): # returns (1,2)^-1 * g * (1,2)
-    return sDimPerm("(1,2)") * g * sDimPerm("(1,2)")
-
 print
 
-print("Twist homomorphism:"),
-print("with mapping"),
-print(sDimPerm.gens()),
-print(u"\u2192"),
-print(map(s4automor, sDimPerm.gens()))
-hom = PermutationGroupMorphism_im_gens(sDimPerm, sDimPerm, map(s4automor, sDimPerm.gens()))
-print(hom)
-
-print("\n## Semidirect product ##")
-sdp = s2Perm.semidirect_product(sDimPerm, [ [s2Perm("(1,2)")], [hom] ])
-sdp_gap = gap(sdp) # needed for functions in vertex_automorph_functions.sage
+print("## Semidirect product ##")
+sdp = sDimPerm.semidirect_product()
+sdp_gap = sdp.as_gap_group() # needed for functions in vertex_automorph_functions.sage
 print(sdp)
 print("Finitely presented:"),
-print(sdp.as_finitely_presented_group())
+print(str(sdp.group.as_finitely_presented_group())[len("Finitely presented group"):])
 
 print("Set size:"),
 print(sdp.order())
@@ -88,10 +94,10 @@ print("####################################\n")
 
 def g_3456_vertex(vl): #input is vertex list
     return [vl[1], vl[2], vl[3], vl[0], vl[4], vl[5]]
-    
+
 def g_34_vertex(vl): #input is vertex list
     return [vl[2], vl[4], vl[0], vl[5], vl[1], vl[3]]
-    
+
 def g_12_34_vertex(vl): #input is vertex list
     return [vl[0], vl[5], vl[2], vl[4], vl[3], vl[1]]
 
@@ -122,14 +128,14 @@ print("subgroups in total.")
 
 def group_is_vertex_transitiv(group):
     v_list_hit = v_list[:]
-    
+
     for g in group:
         img0 = vertex_hom_from_group(v_list, g, generator_list)[0]
         for v in v_list_hit:
             if (img0 == v):
                 v_list_hit.remove(v)
                 break
-        
+
         if not v_list_hit:
             return True
     return False
