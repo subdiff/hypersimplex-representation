@@ -1,15 +1,21 @@
 # H(4,2) - Octahedron automorphism group
-
+import sys
 ##
 # TODO: This means that currently it's necessary that sage is run from the script's location
 load("vertex_automorph_functions.sage")
+load("edge_equiv_classes.sage")
+load("edge.sage")
+load("vertex.sage")
 ##
 
-print("########################")
-print("# Vertex configuration #")
-print("########################\n")
+print("####################################")
+print("# Vertex configuration             #")
+print("####################################\n")
 
-v_list = ['A','B', 'C', 'D', 'E', 'F']
+v_list = [Vertex('A'),Vertex('B'), Vertex('C'), Vertex('D'), Vertex('E'), Vertex('F')]
+e_non_list = [Edge(Vertex('A'),Vertex('C')), Edge(Vertex('B'),Vertex('D')), Edge(Vertex('E'),Vertex('F'))]
+e_list = []
+
 print("Vertices:"),
 print(v_list)
 
@@ -17,9 +23,28 @@ facet_pair_list = [("ABE", "CDF"), ("BCE", "DAF"), ("CDE", "ABF"), ("DAE", "BCF"
 print("Facet pairs:"),
 print(facet_pair_list)
 
-print("\n########################")
-print("# Automorphism group   #")
-print("########################\n")
+v_list_hit = []
+for v in v_list:
+    v_list_hit.append(v)
+    for w in v_list:
+        e = Edge(v,w)
+        if v == w:
+            # no loops
+            continue
+        if e in e_non_list:
+            # not connected
+            continue
+        if e in e_list:
+            # already listed
+            continue
+        e_list.append(e)
+
+print("Edges:"),
+print(e_list)
+
+print("\n####################################")
+print("# Automorphism group               #")
+print("####################################\n")
 
 s2Perm = SymmetricGroup(2)
 sDimPerm = SymmetricGroup(4)
@@ -32,7 +57,7 @@ print(sDimPerm)
 def s4automor(g): # returns (1,2)^-1 * g * (1,2)
     return sDimPerm("(1,2)") * g * sDimPerm("(1,2)")
 
-print("\n")
+print
 
 print("Twist homomorphism:"),
 print("with mapping"),
@@ -57,9 +82,9 @@ sdpList = sdp.list()
 #print(sdpList)
 #print("\n")
 
-print("\n########################")
+print("\n####################################")
 print("# Vertex-Automorphism connection   #")
-print("########################\n")
+print("####################################\n")
 
 def g_3456_vertex(vl): #input is vertex list
     return [vl[1], vl[2], vl[3], vl[0], vl[4], vl[5]]
@@ -83,63 +108,34 @@ print(g_34_vertex(v_list))
 print("(1 2)(3 4):"),
 print(g_12_34_vertex(v_list))
 
-#test = sdp[2] * sdp[3]
-#test = sdp[14]
-#print("test:"),
-#print(test)
-
-    
-#test_gap_factor = str(sdp_gap.Factorization( gap(test) ))
-#test_str = factor_lining(test_gap_factor)
-#print(test_str)
-
-#print(factor_back(test_str, generator_list))
-
-#factor_list = factor_list_lining(test_str, generator_list)
-#factor_list = factor_list_lining(factor_lining(str(sdp_gap.Factorization( gap(test) ))), generator_list)
-#factor_list = factor_list_lining_from_group(test, generator_list)
-
-#print(factor_list)
-
-#print("VERTEX")
-#print(vertex_hom(v_list, factor_list))
-#print(vertex_hom_from_group(v_list, test, generator_list))
-
-print("\n########################")
-print("# Subgroups   #")
-print("########################\n")
+print("\n####################################")
+print("# Subgroups                        #")
+print("####################################\n")
 sdpSubs = sdp.subgroups()
-print("Count:"),
-print(len(sdpSubs))
+print("There are"),
+print(len(sdpSubs)),
+print("subgroups in total.")
 #test = sdpSubs[47]
 #print(test)
 #print(test.list())
-#print(sdpSubs)
+# print(sdpSubs)
 
 def group_is_vertex_transitiv(group):
     v_list_hit = v_list[:]
     
     for g in group:
-     #   print("Groupelement:"),
-     #   print(g)
         img0 = vertex_hom_from_group(v_list, g, generator_list)[0]
-     #   print("Test A:"),
-     #   print(img0)
         for v in v_list_hit:
             if (img0 == v):
                 v_list_hit.remove(v)
                 break
-     #   print("")
-     #   print("List is still:"),
-     #   print(v_list_hit)
         
         if not v_list_hit:
-     #       print("FOUND VERTEX TR SUBGROUP")
             return True
     return False
-    
 
-#print(vertexTransitivTest(test))
+print
+print("Calculating vertex transitive subgroups...\r"),
 
 sdpSubsVertTr = []
 for sub in sdpSubs:
@@ -148,7 +144,31 @@ for sub in sdpSubs:
     if (group_is_vertex_transitiv(sub)):
         sdpSubsVertTr.append(sub)
 
-print("Found"), 
+sys.stdout.write("\033[K")
+print("Found"),
 print(len(sdpSubsVertTr)),
 print("vertex transitive subgroups:")
-print(sdpSubsVertTr)
+for index_sub, sub in enumerate(sdpSubsVertTr):
+    print(str(index_sub +1).zfill(2) + ":"),
+    print(sub.gens())
+
+print("\n####################################")
+print("# Edge equivalence classes         #")
+print("####################################")
+for index_sub, sub in enumerate(sdpSubsVertTr):
+    print
+    print("Subgroup " + str(index_sub+1) + ":"),
+    print(sub.gens())
+
+    print("Permutations:")
+    for g in sub:
+        print(vertex_hom_from_group(v_list, g, generator_list))
+
+    class_list = get_edge_classes(sub, generator_list)
+    print(len(class_list)),
+    print("edge equivalence classes:")
+
+    for i, c in enumerate(class_list):
+        print("class"),
+        print(str(i + 1) + ":"),
+        print(c)

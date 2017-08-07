@@ -15,14 +15,14 @@ def is_number(s):
 #
 # Returns the GAP generator factorization
 # of a group element as string.
-#     
+#
 def factor_str_gap(element):
     return str(sdp_gap.Factorization(gap(element)))
 
 #
 # Returns the GAP generator factorization
 # of a list of group element as a list of strings.
-#     
+#
 def factor_str_gap_list(list):
     ret = []
     for l in list:
@@ -230,6 +230,8 @@ def vertex_hom(v_list, sd_list):
 #
 # Applies to the vertices of the octahedron
 # the permutation 'g' generated through 'generators'.
+#
+# Returns the permutated vertex list
 #
 # 'generators[0]' must always be the identity element and the
 # identity element must be already identitfiable by
