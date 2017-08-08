@@ -1,8 +1,14 @@
-# A Hypersimplex defined by its graph.
+# A Hypersimplex H(dim,par)
+#
+# For now directly defined by its graph.
+#
 class Hypersimplex:
 
-    def __init__(self, graph):
+    def __init__(self, dim, par, graph):
+        self.dim = dim
+        self.par = par
         self.graph = graph
+        self.automorph_group = self.create_automorph_group(dim, par)
 
         self.description = "A Hypersimplex defined by its graph."
 
@@ -18,3 +24,13 @@ class Hypersimplex:
     def __ne__(self, other):
         # non-equality test
         return not self.__eq__(other)
+
+    #
+    # private factory
+    #
+    def create_automorph_group(self, dim, par):
+        group_dim = GroupWrapper(SymmetricGroup(dim))
+        if dim != 2 * par:
+            return group_dim
+
+        return group_dim.semidirect_product_with_s2()
