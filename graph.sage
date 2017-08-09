@@ -84,7 +84,7 @@ class Graph:
 
         img_list = []
         for g in group:
-            img = self.vertex_hom(group.get_factorization(g))
+            img = self.vertex_permutation(group.get_factorization(g))
             img_list.append(img)
 
         v_hit_list = []
@@ -131,11 +131,16 @@ class Graph:
 
     #
     # Applies to the vertices of the octahedron
-    # the permutation 'perm'
+    # the permutation 'factorized_g' of GroupWrapper 'group_wrapper'
     #
-    def vertex_hom(self, perm):
+    # 'factorized_g' needs to be in factorized form according to the
+    # generator-permutation connection declared above
+    #
+    # Returns the permutated vertex list of the graph.
+    #
+    def vertex_permutation(self, factorized_g):
         ret = self.vertices[:]
-        if (len(perm) == 0 or perm[0] == sdp[0]):
+        if (len(factorized_g) == 0 or factorized_g[0] == sdp[0]):
             return ret
 
         g_12_34 = sdp[0]
@@ -175,7 +180,7 @@ class Graph:
 
         g_3456_inverse = g_3456.inverse()
 
-        for f in perm:
+        for f in factorized_g:
             if (f == g_12_34):
                 ret = g_12_34_vertex(ret)
             elif (f == g_3456):
@@ -187,16 +192,4 @@ class Graph:
             else:
                 print("vertex_homo ERROR: Couldn't associate vertex mapping.")
         return ret
-
-    #
-    # Applies to the vertices of the octahedron
-    # the permutation 'factorized_g' of GroupWrapper 'group_wrapper'
-    #
-    # 'factorized_g' needs to be in factorized form according to the
-    # generator-permutation connection declared above
-    #
-    # Returns the permutated vertex list of the graph.
-    #
-    def vertex_permutation(self, factorized_g):
-        return self.vertex_hom(factorized_g)
 
