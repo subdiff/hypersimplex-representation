@@ -1,9 +1,32 @@
 # A graph without loops.
 class Graph:
 
-    def __init__(self, vertex_list, edge_list):
+    def __init__(self, vertex_list, edge_list, edges_are_missing_links = None):
+        # vertices
         self.vertices = vertex_list[:]
-        self.edges = edge_list[:]
+
+        if edges_are_missing_links == None:
+            edges_are_missing_links = False
+
+        # calculate edges
+        if edges_are_missing_links:
+            self.edges = []
+            for v in v_list:
+                for w in v_list:
+                    e = Edge(v,w)
+                    if v == w:
+                        # no loops
+                        continue
+                    if e in e_non_list:
+                        # not connected
+                        continue
+                    if e in self.edges:
+                        # already listed
+                        continue
+                    self.edges.append(e)
+        else:
+            self.edges = edge_list[:]
+
         self.description = "A graph defined by vertices and edges."
 
     def __repr__(self):

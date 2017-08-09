@@ -12,31 +12,13 @@ load("edge_equiv_class.sage")
 ##
 
 print("####################################")
-print("# Vertex configuration             #")
+print("# Hypersimplex configuration       #")
 print("####################################\n")
 
 v_list = [Vertex('A'),Vertex('B'), Vertex('C'), Vertex('D'), Vertex('E'), Vertex('F')]
 e_non_list = [Edge(Vertex('A'),Vertex('C')), Edge(Vertex('B'),Vertex('D')), Edge(Vertex('E'),Vertex('F'))]
-e_list = []
 
-# calculate edges
-v_list_hit = []
-for v in v_list:
-    v_list_hit.append(v)
-    for w in v_list:
-        e = Edge(v,w)
-        if v == w:
-            # no loops
-            continue
-        if e in e_non_list:
-            # not connected
-            continue
-        if e in e_list:
-            # already listed
-            continue
-        e_list.append(e)
-
-hypers = Hypersimplex(4, 2, Graph(v_list, e_list))
+hypers = Hypersimplex(4, 2, Graph(v_list, e_non_list, True))
 print(hypers)
 
 print("\n####################################")
