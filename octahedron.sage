@@ -105,27 +105,14 @@ print
 ###
 ### calculating vertex transitive subgroups
 ###
-wait_str = "Calculating vertex transitive subgroups"
-trans_calc_done = False
-def animate():
-    i = 0
-    while not trans_calc_done:
-        i = (i + 1)%4
-        sys.stdout.write("\r" + wait_str + "."*i)
-        sys.stdout.write("\033[K")
-        time.sleep(0.5)
-
-t = threading.Thread(target=animate)
-t.start()
-
+animation = WaitAnimation("Calculating vertex transitive subgroups")
+animation.start()
 sdp_vert_trans_subs = []
 for sub in sdp_subs:
     if (sub.is_vertex_transitiv(hypers.graph)):
         sdp_vert_trans_subs.append(sub)
-trans_calc_done = True
-###
+animation.stop()
 
-sys.stdout.write("\r\033[K")
 print("Found"),
 print(len(sdp_vert_trans_subs)),
 print("vertex transitive subgroups:")
