@@ -73,9 +73,7 @@ print("\n####################################")
 print("# Subgroups                        #")
 print("####################################\n")
 sdpSubs = sdp.subgroups()
-for sub in sdpSubs:
-    # set factor_generators to toplevel group
-    sub.set_factor_generators(sdp.gens())
+
 print("There are"),
 print(len(sdpSubs)),
 print("subgroups in total.")

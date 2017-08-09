@@ -59,9 +59,6 @@ class GroupWrapper:
     def list(self):
         return self.group.list()
 
-    def set_factor_generators(self, generators):
-        self.factor_generators = generators
-
     def semidirect_product_with_s2(self):
         if self.sdp_with_s2 == None:
             self.create_semidirect_product()
@@ -279,6 +276,10 @@ class Subgroup(GroupWrapper):
     def __init__(self, perm_group, parent_group):
         self.parent = parent_group
         GroupWrapper.__init__(self, perm_group, False)
+
+        # In subgroups we want to still always factor the
+        # elements with the generators of the parent group
+        self.factor_generators = self.parent.generators
 
     def create_factored_elements(self):
         if self.factored_elements != []:
