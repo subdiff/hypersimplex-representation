@@ -78,9 +78,9 @@ class Graph:
         return v_e_list
 
     #
-    # Returns list of edge classes of this graph
+    # Returns list of edge equivalence classes of this graph
     #
-    def get_edge_classes(self, group):
+    def get_edge_equivalence_classes(self, group):
         # every class is an object of type EdgeEquivClass
         class_list = []
 

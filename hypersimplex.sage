@@ -12,6 +12,8 @@ class Hypersimplex:
         self.subgroups = self.automorph_group.subgroups()
         self.vertex_tr_subgroups = None
 
+        self.edge_equiv_classes = [] #TODOX: as dictionary?
+
         self.description = "A Hypersimplex defined by its graph."
 
     def __repr__(self):
@@ -49,6 +51,20 @@ class Hypersimplex:
         return ret
 
     #
+    # private factory
+    #
+    def create_edge_equiv_classes(self):
+        if self.vertex_tr_subgroups == None:
+            print("create_edge_equiv_classes ERROR: First need to calculate vertex transitive subgroups.")
+            return
+        if self.edge_equiv_classes != []:
+            return
+
+        for sub in self.vertex_tr_subgroups:
+            classes = self.graph.get_edge_equivalence_classes(sub)
+            self.edge_equiv_classes.append((sub, classes))
+
+    #
     # TODOX
     #
     def get_vertex_tr_subgroups(self):
@@ -64,8 +80,8 @@ class Hypersimplex:
 
         self.vertex_tr_subgroups = []
         for sub in self.subgroups:
-        #     if sub != hypers.subgroups[62]: # 58, 62  TODOX: for quick testing
-        #         continue
+            if QUICK_TEST and sub != hypers.subgroups[62]: # good values for the octahedron are 58, 62
+                continue
             if (sub.is_vertex_transitiv(self.graph)):
                 self.vertex_tr_subgroups.append(sub)
 

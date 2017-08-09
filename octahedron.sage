@@ -18,6 +18,7 @@ DEV_BUILD = True
 
 if DEV_BUILD:
     SECTION_WAIT = False
+    QUICK_TEST = False
 
 #################
 ## MAIN OUTPUT ##
@@ -115,19 +116,20 @@ for index_sub, sub in enumerate(hypers.vertex_tr_subgroups):
 SECTION_SLEEP(2)
 SECTION("Edge equivalence classes")
 
-edge_equiv_classes_for_sub = []
+# edge_equiv_classes_for_sub = []
 
-for index_sub, sub in enumerate(hypers.vertex_tr_subgroups):
+hypers.create_edge_equiv_classes()
+
+for index, sub_edges in enumerate(hypers.edge_equiv_classes):
     if index_sub > 0:
         print
-    print("Subgroup " + str(index_sub+1) + ":"),
-    print(sub.gens())
+    sub = sub_edges[0]
+    class_list = sub_edges[1]
 
     print("Permutations:")
     for g in sub:
         print(hypers.graph.vertex_permutation(sub.get_factorization(g)))
 
-    class_list = hypers.graph.get_edge_classes(sub)
     len_class_list = len(class_list)
     print(len_class_list),
     if (len_class_list == 1):
@@ -140,13 +142,11 @@ for index_sub, sub in enumerate(hypers.vertex_tr_subgroups):
         print(str(i + 1) + ":"),
         print(c)
 
-    edge_equiv_classes_for_sub.append(class_list)
-
 ############################## NEXT SECTION ##############################
 SECTION_SLEEP(2)
 SECTION("Matrix setup")
 
-for eec in edge_equiv_classes_for_sub:
-    multiplicity_matrix = hypers.get_multiplicity_matrix(eec)
-    print("Multipl. matrix for " + str(eec) + ":")
+for sub_eec in hypers.edge_equiv_classes:
+    multiplicity_matrix = hypers.get_multiplicity_matrix(sub_eec[1])
+    print("Multipl. matrix for " + str(sub_eec[0]) + ":")
     print(multiplicity_matrix)
