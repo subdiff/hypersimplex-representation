@@ -12,9 +12,17 @@ load("edge_equiv_class.sage")
 load("helpers.sage")
 ##
 
-print("####################################")
-print("# Hypersimplex configuration       #")
-print("####################################\n")
+# For development switch off
+# release features
+DEV_BUILD = True
+
+if DEV_BUILD:
+    SECTION_WAIT = False
+
+#################
+## MAIN OUTPUT ##
+#################
+SECTION("Hypersimplex configuration", 0)
 
 hypers = Hypersimplex(4, 2,
             Graph(
@@ -26,9 +34,9 @@ hypers = Hypersimplex(4, 2,
             )
 print(hypers)
 
-print("\n####################################")
-print("# Automorphism group               #")
-print("####################################\n")
+############################## NEXT SECTION ##############################
+SECTION_SLEEP(3)
+SECTION("Automorphism group")
 
 s2Perm = SymmetricGroup(2)
 sDimPerm = GroupWrapper(SymmetricGroup(4), True)
@@ -50,9 +58,8 @@ print(str(sdp.group.as_finitely_presented_group())[len("Finitely presented group
 print("Group size:"),
 print(sdp.order())
 
-print("\n####################################")
-print("# Vertex-Automorphism connection   #")
-print("####################################\n")
+############################## NEXT SECTION ##############################
+SECTION("Vertex-Automorphism connection")
 
 def g_3456_vertex(vl): #input is vertex list
     return [vl[1], vl[2], vl[3], vl[0], vl[4], vl[5]]
@@ -92,9 +99,9 @@ print(hypers.graph.generator_permutations[sdp[1]](hypers.graph.vertices))
 print("(3 4):"),
 print(hypers.graph.generator_permutations[sdp[3]](hypers.graph.vertices))
 
-print("\n####################################")
-print("# Subgroups                        #")
-print("####################################\n")
+############################## NEXT SECTION ##############################
+SECTION("Subgroups")
+
 sdp_subs = sdp.subgroups()
 
 print("There are"),
@@ -120,9 +127,9 @@ for index_sub, sub in enumerate(sdp_vert_trans_subs):
     print(str(index_sub +1).zfill(2) + ":"),
     print(sub.gens())
 
-print("\n####################################")
-print("# Edge equivalence classes         #")
-print("####################################")
+############################## NEXT SECTION ##############################
+SECTION_SLEEP(2)
+SECTION("Edge equivalence classes")
 
 for index_sub, sub in enumerate(sdp_vert_trans_subs):
     print

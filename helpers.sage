@@ -39,3 +39,28 @@ class WaitAnimation:
             sys.stdout.write("\r" + self.message + "."*i)
             sys.stdout.write("\033[K")
             time.sleep(0.5)
+
+#
+# Creates a section heading with 'text'
+# and optional wait time 'wait'.
+# Default wait time is 2 seconds.
+#
+def SECTION(text, wait = None):
+    stars = "#" * (len(text) + 4)
+    print("\n" + stars)
+    print("# " + text + " #")
+    print(stars + "\n")
+
+    if wait == None:
+        SECTION_SLEEP(2)
+    else:
+        SECTION_SLEEP(wait)
+
+#
+# Sleep wrapper to allow quick disabling
+# of wait time between sections.
+#
+def SECTION_SLEEP(time):
+    if 'SECTION_WAIT' in globals() and not SECTION_WAIT:
+        return
+    sleep(time)
