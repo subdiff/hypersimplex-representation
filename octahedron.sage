@@ -4,11 +4,12 @@ import sys, time, threading
 # TODO: This means that currently it's necessary that sage is run from the script's location
 load("edge.sage")
 load("vertex.sage")
-
 load("graph.sage")
 load("hypersimplex.sage")
 load("group_wrapper.sage")
+load("subgroup.sage")
 load("edge_equiv_class.sage")
+load("helpers.sage")
 ##
 
 print("####################################")

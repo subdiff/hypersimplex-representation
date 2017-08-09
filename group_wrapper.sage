@@ -1,13 +1,3 @@
-#
-# Simple test if 's' is a number.   //TODOX: import as module?
-#
-def is_number(s):
-    try:
-        float(s)
-        return True
-    except ValueError:
-        return False
-
 # Wrapper class for a permutation group.
 class GroupWrapper:
 
@@ -243,7 +233,6 @@ class GroupWrapper:
         self.create_factored_elements()
         return self.factored_elements
 
-
     #
     # private factory
     #
@@ -270,23 +259,3 @@ class GroupWrapper:
 
 #         print(str(self.sdp_with_s2))
 #         print
-
-
-class Subgroup(GroupWrapper):
-    def __init__(self, perm_group, parent_group):
-        self.parent = parent_group
-        GroupWrapper.__init__(self, perm_group, False)
-
-        # In subgroups we want to still always factor the
-        # elements with the generators of the parent group
-        self.factor_generators = self.parent.generators
-
-    def create_factored_elements(self):
-        if self.factored_elements != []:
-            return
-
-        flist = []
-        for g in self.group:
-            factor_lined_g = self.parent.get_factorization(g)
-            flist.append(factor_lined_g)
-        self.factored_elements = flist
