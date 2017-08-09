@@ -15,10 +15,14 @@ print("####################################")
 print("# Hypersimplex configuration       #")
 print("####################################\n")
 
-v_list = [Vertex('A'),Vertex('B'), Vertex('C'), Vertex('D'), Vertex('E'), Vertex('F')]
-e_non_list = [Edge(Vertex('A'),Vertex('C')), Edge(Vertex('B'),Vertex('D')), Edge(Vertex('E'),Vertex('F'))]
-
-hypers = Hypersimplex(4, 2, Graph(v_list, e_non_list, True))
+hypers = Hypersimplex(4, 2,
+            Graph(
+            # vertices
+            [Vertex('A'),Vertex('B'), Vertex('C'), Vertex('D'), Vertex('E'), Vertex('F')],
+            # non-edges
+            [Edge(Vertex('A'),Vertex('C')), Edge(Vertex('B'),Vertex('D')), Edge(Vertex('E'),Vertex('F'))],
+            True)
+            )
 print(hypers)
 
 print("\n####################################")
@@ -63,11 +67,11 @@ def g_3456_inverse_vertex(vl): #input is vertex list
 
 print("On generators:")
 print("(3 4 5 6):"),
-print(g_3456_vertex(v_list))
+print(g_3456_vertex(hypers.graph.vertices))
 print("(3 4):"),
-print(g_34_vertex(v_list))
+print(g_34_vertex(hypers.graph.vertices))
 print("(1 2)(3 4):"),
-print(g_12_34_vertex(v_list))
+print(g_12_34_vertex(hypers.graph.vertices))
 
 print("\n####################################")
 print("# Subgroups                        #")

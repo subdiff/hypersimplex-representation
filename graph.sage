@@ -11,13 +11,13 @@ class Graph:
         # calculate edges
         if edges_are_missing_links:
             self.edges = []
-            for v in v_list:
-                for w in v_list:
+            for v in self.vertices:
+                for w in self.vertices:
                     e = Edge(v,w)
                     if v == w:
                         # no loops
                         continue
-                    if e in e_non_list:
+                    if e in edge_list:
                         # not connected
                         continue
                     if e in self.edges:
@@ -89,7 +89,7 @@ class Graph:
 
         v_hit_list = []
 
-        for v in v_list:
+        for v in self.vertices:
             def test_on_hit(v):
                 for w in v_hit_list:
                     if Edge(v,w) in self.edges:
