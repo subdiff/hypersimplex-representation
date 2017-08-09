@@ -87,8 +87,8 @@ trans_calc_done = False
 def animate():
     i = 0
     while not trans_calc_done:
-        i = (i + 1)%3
-        sys.stdout.write("\r" + wait_str + "."*(i+1))
+        i = (i + 1)%4
+        sys.stdout.write("\r" + wait_str + "."*i)
         sys.stdout.write("\033[K")
         time.sleep(0.5)
 
