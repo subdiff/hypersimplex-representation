@@ -16,16 +16,13 @@ class GroupWrapper:
             create_sdp = False
 
         self.group = perm_group
-#         self.gap_group = None
         self.generators = perm_group.gens()
         self.factor_generators = self.generators
 
-        self.factored_elements = None
+        self.factored_elements = []
 
         self.description = "Wrapper for GAP permutation group defined by its generators."
         self.sdp_with_s2 = None
-
-        self.create_factored_elements()
 
         if create_sdp:
             self.create_semidirect_product()
@@ -48,14 +45,9 @@ class GroupWrapper:
         return not self.__eq__(other)
 
     def __getitem__(self, key):
-        return self.group[key]
+        return self.group.list()[key]
 
     def as_gap_group(self):
-#         print("BLA")
-#         print(self.gap_group)
-#         print(self.group)
-#         if self.gap_group == None:
-#             self.gap_group = gap(self.group)
         return gap(self.group)
 
     def gens(self):
@@ -78,19 +70,14 @@ class GroupWrapper:
     def subgroups(self):
         ret = []
         for sub in self.group.subgroups():
-#             if sub != self.group.subgroups()[15]:
-#                 continue
-            ret.append(GroupWrapper(sub))
+            ret.append(Subgroup(sub, self))
         return ret
 
     def is_vertex_transitiv(self, graph):
         v_list_hit = graph.vertices[:]
 
         for factored_g in self.get_factorizations():
-            print("TEST1"),
-            print(factored_g)
             img0 = graph.vertex_permutation(factored_g, self)[0]
-            print("TEST2")
             for v in v_list_hit:
                 if (img0 == v):
                     v_list_hit.remove(v)
@@ -105,11 +92,8 @@ class GroupWrapper:
     # of a group element as string.
     #
     def factor_str_gap(self, element):
-#         return str(sdp_gap.Factorization(gap(element)))
         gap_el = gap(element)
-#         print(gap(element))
         gap_group = self.as_gap_group()
-#         print(gap_group)
         return str(gap_group.Factorization( gap_el ))
 
     #
@@ -117,13 +101,9 @@ class GroupWrapper:
     # of a list of group element as a list of strings.
     #
     def factor_str_gap_list(self, list):
-#         print("XXX"),
-#         print(list)
         ret = []
         for l in list:
-#             print(l)
             ret.append(self.factor_str_gap(l))
-#         print("XXX")
         return ret
 
     #
@@ -191,17 +171,10 @@ class GroupWrapper:
     # the first character.
     #
     def factor_list_lining(self, factor_string):
-#         print("factor_list_lining START:"),
-#         print(factor_string)
         i = 0
         ret = []
         gens = self.factor_generators
-#         print("factor_generators:"),
-#         print(gens)
         comp_list = self.factor_str_gap_list(gens)
-
-#         print("comp_list:")
-#         print(comp_list)
 
         def is_identity():
             c = factor_string[0]
@@ -229,9 +202,6 @@ class GroupWrapper:
                         break
                 #print(ret) # prints every in between element in the group multiplication
             i += 1
-#         print("RETURN:"),
-#         print(ret)
-#         print("factor_list_lining END")
         return ret
 
     #
@@ -240,36 +210,24 @@ class GroupWrapper:
     def factor_lining_for_element(self, g):
         # GAP factor string
         gap_factor_string = self.factor_str_gap(g)
-        print(gap_factor_string)
         # as purified text string
         factor_string = self.factor_lining(gap_factor_string)
-#         print(factor_string)
         # as list of its factors
         factor_list = self.factor_list_lining(factor_string)
-#         print("factor_list:")
-#         print(factor_list)
 
         return factor_list
     #
     # TODOX
     #
     def create_factored_elements(self):
-#         print("XXX"),
-#         print(self.gens())
 
-        if self.factored_elements != None:
+        if self.factored_elements != []:
             return
 
         flist = []
         for g in self.group:
-#             print("X"),
-#             print(g)
             factor_lined_g = self.factor_lining_for_element(g)
-            print("factor_lined_g"),
-            print(factor_lined_g)
             flist.append(factor_lined_g)
-        print("FLIST")
-        print(flist)
         self.factored_elements = flist
 
     #
@@ -277,14 +235,15 @@ class GroupWrapper:
     #
     def get_factorization(self, g):
         self.create_factored_elements()
-        return self.factored_elements[self.group.index(g)]
+        for i_gg, gg in enumerate(self.group):
+            if gg == g:
+                break
+        return self.factored_elements[i_gg]
     #
     # TODOX
     #
     def get_factorizations(self):
         self.create_factored_elements()
-        print("factored_elements:"),
-        print(self.factored_elements)
         return self.factored_elements
 
 
@@ -314,3 +273,19 @@ class GroupWrapper:
 
 #         print(str(self.sdp_with_s2))
 #         print
+
+
+class Subgroup(GroupWrapper):
+    def __init__(self, perm_group, parent_group):
+        self.parent = parent_group
+        GroupWrapper.__init__(self, perm_group, False)
+
+    def create_factored_elements(self):
+        if self.factored_elements != []:
+            return
+
+        flist = []
+        for g in self.group:
+            factor_lined_g = self.parent.get_factorization(g)
+            flist.append(factor_lined_g)
+        self.factored_elements = flist

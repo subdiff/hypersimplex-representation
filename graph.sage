@@ -39,11 +39,6 @@ class Graph:
         img_w = self.img_of_vertex(e.w, img)
 
         return Edge(img_v, img_w)
-        # TODOX: Don't give a copy back?
-#         img_e = Edge(img_v, img_w)
-#         for e in self.edges:
-#             if e == img_e:
-#                 return e
 
     #
     # Returns list of all edges
@@ -60,13 +55,13 @@ class Graph:
     #
     # Returns list of edge classes of this graph
     #
-    def get_edge_classes(group, generators):
+    def get_edge_classes(self, group):
         # every class is an object of type EdgeEquivClass
         class_list = []
 
         img_list = []
         for g in group:
-            img = vertex_hom_from_group(v_list, g, generators)
+            img = self.vertex_hom(group.get_factorization(g))
             img_list.append(img)
 
         v_hit_list = []
@@ -85,46 +80,39 @@ class Graph:
 
             v_hit_list.append(v)
 
-            v_e_list = get_edges_to_vertex(v)
+            v_e_list = self.get_edges_to_vertex(v)
 
             def set_to_class(img_list):
                 for c in class_list:
                     for e in c:
                         if e in img_list:
-                            c.addEdges(img_list)
+                            c.add_edges(img_list)
                             return
                 # class is not yet listed in class_list:
-                class_list.append(EdgeEquivClass())
-                class_list[-1].addEdges(img_list)
+                class_list.append(EdgeEquivClass(group))
+                class_list[-1].add_edges(img_list)
 
             for v_e in v_e_list:
                 e_img_list = []
                 for g_i, g in enumerate(group):
                     img = img_list[g_i]
-                    edge_img = img_of_edge(v_e, img)
+                    edge_img = self.img_of_edge(v_e, img)
                     e_img_list.append(edge_img)
 
                 set_to_class(e_img_list)
-
 
         for i, c in enumerate(class_list):
             class_list[i] = sorted(c, key=lambda edge: edge.v.label + edge.w.label)
 
         return class_list
 
-
-        ######################################################
-
     #
     # Applies to the vertices of the octahedron
-    # the permutation 'sd_list'
+    # the permutation 'perm'
     #
-    def vertex_hom(self, sd_list):
+    def vertex_hom(self, perm):
         ret = self.vertices[:]
-        print("vertex_hom")
-        print(len(sd_list))
-        print(sd_list)
-        if (len(sd_list) == 0 or sd_list[0] == sdp[0]):
+        if (len(perm) == 0 or perm[0] == sdp[0]):
             return ret
 
         g_12_34 = sdp[0]
@@ -164,7 +152,7 @@ class Graph:
 
         g_3456_inverse = g_3456.inverse()
 
-        for f in sd_list:
+        for f in perm:
             if (f == g_12_34):
                 ret = g_12_34_vertex(ret)
             elif (f == g_3456):
@@ -177,36 +165,15 @@ class Graph:
                 print("vertex_homo ERROR: Couldn't associate vertex mapping.")
         return ret
 
-#     def is_vertex_transitiv(self, group):
-#         v_list_hit = self.vertices[:]
-#
-#         for g in self.group:
-#             img0 = self.vertex_permutation(g, self)[0]
-#             for v in v_list_hit:
-#                 if (img0 == v):
-#                     v_list_hit.remove(v)
-#                     break
-#
-#             if not v_list_hit:
-#                 return True
-#         return False
-
     #
     # Applies to the vertices of the octahedron
-    # the permutation 'g' of GroupWrapper 'group_wrapper'
+    # the permutation 'factorized_g' of GroupWrapper 'group_wrapper'
     #
-    # Returns the permutated vertex list TODOX: Graph?
+    # 'factorized_g' needs to be in factorized form according to the
+    # generator-permutation connection declared above
     #
-    # 'generators[0]' must always be the identity element and the   TODOX
-    # identity element must be already identitfiable by
-    # the first character.
+    # Returns the permutated vertex list of the graph.
     #
     def vertex_permutation(self, factorized_g, group_wrapper):
-#         fac = group_wrapper.get_factorization(factorized_g)
-#         print("AAA"),
-#         print(factorized_g)
         return self.vertex_hom(factorized_g)
-
-
-
 

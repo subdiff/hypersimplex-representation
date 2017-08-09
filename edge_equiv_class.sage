@@ -38,8 +38,7 @@ class EdgeEquivClass:
             if e == edge:
                 return
         self.edges.append(edge)
-#         self.edges = sorted(self.edges, key=lambda edge: edge.v.label + edge.w.label)
-        self.edges.sort(lambda edg: edg.v.label + edg.w.label)
+        self.edges.sort(key = lambda edg: edg.v.label + edg.w.label)
 
     def add_edges(self, edge_list):
         for e in edge_list:

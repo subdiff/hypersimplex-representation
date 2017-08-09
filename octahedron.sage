@@ -2,14 +2,13 @@
 import sys
 ##
 # TODO: This means that currently it's necessary that sage is run from the script's location
-# load("vertex_automorph_functions.sage")
-# load("edge_equiv_classes.sage")
 load("edge.sage")
 load("vertex.sage")
 
 load("graph.sage")
 load("hypersimplex.sage")
 load("group_wrapper.sage")
+load("edge_equiv_class.sage")
 ##
 
 print("####################################")
@@ -19,10 +18,6 @@ print("####################################\n")
 v_list = [Vertex('A'),Vertex('B'), Vertex('C'), Vertex('D'), Vertex('E'), Vertex('F')]
 e_non_list = [Edge(Vertex('A'),Vertex('C')), Edge(Vertex('B'),Vertex('D')), Edge(Vertex('E'),Vertex('F'))]
 e_list = []
-
-# facet_pair_list = [("ABE", "CDF"), ("BCE", "DAF"), ("CDE", "ABF"), ("DAE", "BCF")]
-# print("Facet pairs:"),
-# print(facet_pair_list)
 
 # calculate edges
 v_list_hit = []
@@ -40,21 +35,6 @@ for v in v_list:
             # already listed
             continue
         e_list.append(e)
-
-
-print("Vertices:"),
-print(v_list)
-print("Edges:"),
-print(e_list)
-
-# graph = Graph(v_list, e_list)
-# print("Octahedron graph:")
-# print(graph)
-
-# group_wrapper = GroupWrapper(SymmetricGroup(4))
-# print(group_wrapper)
-# print(group_wrapper.gens)
-# print(len(group_wrapper))
 
 hypers = Hypersimplex(4, 2, Graph(v_list, e_list))
 print(hypers)
@@ -82,11 +62,6 @@ print(str(sdp.group.as_finitely_presented_group())[len("Finitely presented group
 
 print("Set size:"),
 print(sdp.order())
-sdpList = sdp.list()
-
-#print("\n")
-#print(sdpList)
-#print("\n")
 
 print("\n####################################")
 print("# Vertex-Automorphism connection   #")
@@ -103,8 +78,6 @@ def g_12_34_vertex(vl): #input is vertex list
 
 def g_3456_inverse_vertex(vl): #input is vertex list
     return [vl[3], vl[0], vl[1], vl[2], vl[4], vl[5]]
-
-generator_list = [sdp[0], sdp[1], sdp[2], sdp[3]]
 
 print("On generators:")
 print("(3 4 5 6):"),
@@ -124,40 +97,12 @@ for sub in sdpSubs:
 print("There are"),
 print(len(sdpSubs)),
 print("subgroups in total.")
-#test = sdpSubs[47]
-#print(test)
-#print(test.list())
-# print(sdpSubs)
-
-# def group_is_vertex_transitiv(group):
-#     v_list_hit = v_list[:]
-#
-#     for g in group:
-#         img0 = vertex_hom_from_group(v_list, g, generator_list)[0]
-#         for v in v_list_hit:
-#             if (img0 == v):
-#                 v_list_hit.remove(v)
-#                 break
-#
-#         if not v_list_hit:
-#             return True
-#     return False
-
-
-# sdp.create_factored_elements()
-# for index, fe in enumerate(sdp.factored_elements):
-#     print(index),
-#     print (fe)
-
-
 
 print
 print("Calculating vertex transitive subgroups...\r"),
 
 sdpSubsVertTr = []
 for sub in sdpSubs:
-    print("testing sub"),
-    print(sub.gens())
     if (sub.is_vertex_transitiv(hypers.graph)):
         sdpSubsVertTr.append(sub)
 
@@ -180,12 +125,15 @@ for index_sub, sub in enumerate(sdpSubsVertTr):
 
     print("Permutations:")
     for g in sub:
-        print(vertex_hom_from_group(v_list, g, generator_list))
+        print(hypers.graph.vertex_permutation(sub.get_factorization(g), sub))
 
-#     print("XXX")
-    class_list = graph.get_edge_classes(sub, generator_list)
-    print(len(class_list)),
-    print("edge equivalence classes:")
+    class_list = hypers.graph.get_edge_classes(sub)
+    len_class_list = len(class_list)
+    print(len_class_list),
+    if (len_class_list == 1):
+        print("edge equivalence class:")
+    else:
+        print("edge equivalence classes:")
 
     for i, c in enumerate(class_list):
         print("class"),
