@@ -29,8 +29,8 @@ class Hypersimplex:
     # private factory
     #
     def create_automorph_group(self, dim, par):
-        group_dim = GroupWrapper(SymmetricGroup(dim))
+        sym_group = GroupWrapper(SymmetricGroup(dim))
         if dim != 2 * par:
-            return group_dim
+            return sym_group
 
-        return group_dim.semidirect_product_with_s2()
+        return sym_group.semidirect_product_with_s2()

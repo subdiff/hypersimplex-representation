@@ -27,6 +27,8 @@ class Graph:
         else:
             self.edges = edge_list[:]
 
+        self.generator_permutations = {}
+
         self.description = "A graph defined by vertices and edges."
 
     def __repr__(self):
@@ -130,6 +132,23 @@ class Graph:
         return class_list
 
     #
+    # TODOX
+    #
+    def set_generator_permutations(self, group, gen_to_perm_fct):
+        for fc in group.factor_generators:
+            perm_tuple = gen_to_perm_fct(fc)
+            self.generator_permutations[fc] = perm_tuple[0]
+            # add inverse if different
+            if (len(perm_tuple) == 2 and perm_tuple[0] != perm_tuple[1]):
+                self.generator_permutations[fc.inverse()] = perm_tuple[1]
+
+    #
+    # TODOX
+    #
+    def vertex_factor_permutation(self, vertex_list, factor):
+        return self.generator_permutations[factor](vertex_list)
+
+    #
     # Applies to the vertices of the octahedron
     # the permutation 'factorized_g' of GroupWrapper 'group_wrapper'
     #
@@ -143,53 +162,8 @@ class Graph:
         if (len(factorized_g) == 0 or factorized_g[0] == sdp[0]):
             return ret
 
-        g_12_34 = sdp[0]
-        g_3456 = sdp[0]
-        g_34 = sdp[0]
-
-        g_3456_inv = sdp[0]
-
-        class nonlocal:
-            g_3456 = sdp[0]
-            g_34 = sdp[0]
-
-        def find_rest(x,y):
-            str_x = str(x)
-
-            if (str_x[len(str_x) - 2] == '6'):
-                nonlocal.g_3456 = x
-                nonlocal.g_34 = y
-            else:
-                nonlocal.g_3456 = y
-                nonlocal.g_34 = x
-
-        if (str(sdp[1])[1] == '1'):
-            g_12_34 = sdp[1]
-            find_rest(sdp[2], sdp[3])
-        elif (str(sdp[2])[1] == '1'):
-            g_12_34 = sdp[2]
-            find_rest(sdp[1], sdp[3])
-        elif (str(sdp[3])[1] == '1'):
-            g_12_34 = sdp[3]
-            find_rest(sdp[1], sdp[2])
-        else:
-            print("vertex_homo ERROR: Didn't find first sdp element")
-
-        g_3456 = nonlocal.g_3456
-        g_34 = nonlocal.g_34
-
-        g_3456_inverse = g_3456.inverse()
-
         for f in factorized_g:
-            if (f == g_12_34):
-                ret = g_12_34_vertex(ret)
-            elif (f == g_3456):
-                ret = g_3456_vertex(ret)
-            elif (f == g_34):
-                ret = g_34_vertex(ret)
-            elif (f == g_3456_inverse):
-                ret = g_3456_inverse_vertex(ret)
-            else:
-                print("vertex_homo ERROR: Couldn't associate vertex mapping.")
+            ret = self.vertex_factor_permutation(ret, f)
+
         return ret
 

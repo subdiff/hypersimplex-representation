@@ -66,13 +66,31 @@ def g_12_34_vertex(vl): #input is vertex list
 def g_3456_inverse_vertex(vl): #input is vertex list
     return [vl[3], vl[0], vl[1], vl[2], vl[4], vl[5]]
 
+def gen_to_perm_fct(generator):
+    str_gen = str(generator)
+
+    if str_gen == "(1,2)(3,4)":
+        return (g_12_34_vertex, g_12_34_vertex)
+
+    if str_gen == "(3,4,5,6)":
+        return (g_3456_vertex, g_3456_inverse_vertex)
+
+    if str_gen == "(3,4)":
+        return (g_34_vertex, g_34_vertex)
+
+    print("gen_to_perm_fct ERROR: Couldn't associate generator element.")
+    return ()
+
+# define generator permutations on graph
+hypers.graph.set_generator_permutations(hypers.automorph_group, gen_to_perm_fct)
+
 print("On generators:")
-print("(3 4 5 6):"),
-print(g_3456_vertex(hypers.graph.vertices))
-print("(3 4):"),
-print(g_34_vertex(hypers.graph.vertices))
 print("(1 2)(3 4):"),
-print(g_12_34_vertex(hypers.graph.vertices))
+print(hypers.graph.generator_permutations[sdp[2]](hypers.graph.vertices))
+print("(3 4 5 6):"),
+print(hypers.graph.generator_permutations[sdp[1]](hypers.graph.vertices))
+print("(3 4):"),
+print(hypers.graph.generator_permutations[sdp[3]](hypers.graph.vertices))
 
 print("\n####################################")
 print("# Subgroups                        #")
