@@ -46,7 +46,7 @@ print(sdp)
 print("Finitely presented:"),
 print(str(sdp.group.as_finitely_presented_group())[len("Finitely presented group"):])
 
-print("Set size:"),
+print("Group size:"),
 print(sdp.order())
 
 print("\n####################################")
@@ -76,14 +76,16 @@ print(g_12_34_vertex(hypers.graph.vertices))
 print("\n####################################")
 print("# Subgroups                        #")
 print("####################################\n")
-sdpSubs = sdp.subgroups()
+sdp_subs = sdp.subgroups()
 
 print("There are"),
-print(len(sdpSubs)),
+print(len(sdp_subs)),
 print("subgroups in total.")
 print
 
+###
 ### calculating vertex transitive subgroups
+###
 wait_str = "Calculating vertex transitive subgroups"
 trans_calc_done = False
 def animate():
@@ -97,18 +99,18 @@ def animate():
 t = threading.Thread(target=animate)
 t.start()
 
-sdpSubsVertTr = []
-for sub in sdpSubs:
+sdp_vert_trans_subs = []
+for sub in sdp_subs:
     if (sub.is_vertex_transitiv(hypers.graph)):
-        sdpSubsVertTr.append(sub)
+        sdp_vert_trans_subs.append(sub)
 trans_calc_done = True
 ###
 
 sys.stdout.write("\r\033[K")
 print("Found"),
-print(len(sdpSubsVertTr)),
+print(len(sdp_vert_trans_subs)),
 print("vertex transitive subgroups:")
-for index_sub, sub in enumerate(sdpSubsVertTr):
+for index_sub, sub in enumerate(sdp_vert_trans_subs):
     print(str(index_sub +1).zfill(2) + ":"),
     print(sub.gens())
 
@@ -116,7 +118,7 @@ print("\n####################################")
 print("# Edge equivalence classes         #")
 print("####################################")
 
-for index_sub, sub in enumerate(sdpSubsVertTr):
+for index_sub, sub in enumerate(sdp_vert_trans_subs):
     print
     print("Subgroup " + str(index_sub+1) + ":"),
     print(sub.gens())
