@@ -92,7 +92,7 @@ class Graph:
         for v in v_list:
             def test_on_hit(v):
                 for w in v_hit_list:
-                    if Edge(v,w) in e_list:
+                    if Edge(v,w) in self.edges:
                         return True
                 return False
 
