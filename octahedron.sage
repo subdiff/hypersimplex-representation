@@ -38,24 +38,12 @@ print(hypers)
 SECTION_SLEEP(3)
 SECTION("Automorphism group")
 
-s2Perm = SymmetricGroup(2)
-sDimPerm = GroupWrapper(SymmetricGroup(4), True)
-print("## Factors ##")
-print(u"S\u2082:"),
-print(s2Perm)
-print(u"S\u2084:"),
-print(sDimPerm)
-print
-
-print("## Semidirect product ##")
-sdp = sDimPerm.semidirect_product_with_s2()
-sdp_gap = sdp.as_gap_group() # needed for functions in vertex_automorph_functions.sage
-print(sdp)
+print(hypers.automorph_group)
 print("Finitely presented:"),
-print(str(sdp.group.as_finitely_presented_group())[len("Finitely presented group"):])
+print(str(hypers.automorph_group.group.as_finitely_presented_group())[len("Finitely presented group"):])
 
 print("Group size:"),
-print(sdp.order())
+print(hypers.automorph_group.order())
 
 ############################## NEXT SECTION ##############################
 SECTION("Group generators as vertex permutations")
@@ -93,19 +81,17 @@ def gen_to_perm_fct(generator):
 hypers.graph.set_generator_permutations(hypers.automorph_group, gen_to_perm_fct)
 
 print("(1 2)(3 4):"),
-print(hypers.graph.generator_permutations[sdp[2]](hypers.graph.vertices))
+print(hypers.graph.generator_permutations[hypers.automorph_group[2]](hypers.graph.vertices))
 print("(3 4 5 6):"),
-print(hypers.graph.generator_permutations[sdp[1]](hypers.graph.vertices))
+print(hypers.graph.generator_permutations[hypers.automorph_group[1]](hypers.graph.vertices))
 print("(3 4):"),
-print(hypers.graph.generator_permutations[sdp[3]](hypers.graph.vertices))
+print(hypers.graph.generator_permutations[hypers.automorph_group[3]](hypers.graph.vertices))
 
 ############################## NEXT SECTION ##############################
 SECTION("Subgroups")
 
-sdp_subs = sdp.subgroups()
-
 print("There are"),
-print(len(sdp_subs)),
+print(len(hypers.subgroups)),
 print("subgroups in total.")
 
 ############################## NEXT SECTION ##############################
@@ -115,18 +101,13 @@ SECTION("Vertex transitive subgroups")
 ###
 animation = WaitAnimation("Calculating vertex transitive subgroups")
 animation.start()
-sdp_vert_trans_subs = []
-for sub in sdp_subs:
-#     if sub != sdp_subs[62]: # 58, 62  TODOX: for quick testing
-#         continue
-    if (sub.is_vertex_transitiv(hypers.graph)):
-        sdp_vert_trans_subs.append(sub)
+hypers.create_vertex_tr_subgroups()
 animation.stop()
 
 print("Found"),
-print(len(sdp_vert_trans_subs)),
+print(len(hypers.vertex_tr_subgroups)),
 print("vertex transitive subgroups:")
-for index_sub, sub in enumerate(sdp_vert_trans_subs):
+for index_sub, sub in enumerate(hypers.vertex_tr_subgroups):
     print(str(index_sub +1).zfill(2) + ":"),
     print(sub.gens())
 
@@ -136,7 +117,7 @@ SECTION("Edge equivalence classes")
 
 edge_equiv_classes_for_sub = []
 
-for index_sub, sub in enumerate(sdp_vert_trans_subs):
+for index_sub, sub in enumerate(hypers.vertex_tr_subgroups):
     if index_sub > 0:
         print
     print("Subgroup " + str(index_sub+1) + ":"),

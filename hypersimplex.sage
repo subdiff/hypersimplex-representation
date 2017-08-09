@@ -9,6 +9,8 @@ class Hypersimplex:
         self.par = par
         self.graph = graph
         self.automorph_group = self.create_automorph_group(dim, par)
+        self.subgroups = self.automorph_group.subgroups()
+        self.vertex_tr_subgroups = None
 
         self.description = "A Hypersimplex defined by its graph."
 
@@ -47,6 +49,27 @@ class Hypersimplex:
         return ret
 
     #
+    # TODOX
+    #
+    def get_vertex_tr_subgroups(self):
+        self.create_vertex_tr_subgroups()
+        return self.vertex_tr_subgroups
+
+    #
+    # private factory
+    #
+    def create_vertex_tr_subgroups(self):
+        if self.vertex_tr_subgroups != None:
+            return
+
+        self.vertex_tr_subgroups = []
+        for sub in self.subgroups:
+        #     if sub != hypers.subgroups[62]: # 58, 62  TODOX: for quick testing
+        #         continue
+            if (sub.is_vertex_transitiv(self.graph)):
+                self.vertex_tr_subgroups.append(sub)
+
+    #
     # private factory
     #
     def create_automorph_group(self, dim, par):
@@ -55,3 +78,6 @@ class Hypersimplex:
             return sym_group
 
         return sym_group.semidirect_product_with_s2()
+
+    def get_edge_classes(sub):
+        return self.graph.get_edge_classes(sub)
