@@ -98,7 +98,8 @@ class GroupWrapper:
     # the same on but with all factors written down
     # explicitly.
     #
-    def factor_lining(self, fac):   #TODOX: static?
+    @staticmethod
+    def factor_lining(fac):
         ret = ""
 
         if fac[0] == '<': # identity element (only)
