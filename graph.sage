@@ -126,8 +126,10 @@ class Graph:
 
                 set_to_class(e_img_list)
 
-        for i, c in enumerate(class_list):
-            class_list[i] = sorted(c, key=lambda edge: edge.v.label + edge.w.label)
+        class_list.sort()
+
+        for c in class_list:
+            c.calculate_multiplicity()
 
         return class_list
 

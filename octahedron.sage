@@ -117,6 +117,8 @@ animation = WaitAnimation("Calculating vertex transitive subgroups")
 animation.start()
 sdp_vert_trans_subs = []
 for sub in sdp_subs:
+#     if sub != sdp_subs[62]: # 58, 62  TODOX: for quick testing
+#         continue
     if (sub.is_vertex_transitiv(hypers.graph)):
         sdp_vert_trans_subs.append(sub)
 animation.stop()
@@ -131,6 +133,8 @@ for index_sub, sub in enumerate(sdp_vert_trans_subs):
 ############################## NEXT SECTION ##############################
 SECTION_SLEEP(2)
 SECTION("Edge equivalence classes")
+
+edge_equiv_classes_for_sub = []
 
 for index_sub, sub in enumerate(sdp_vert_trans_subs):
     if index_sub > 0:
@@ -154,3 +158,14 @@ for index_sub, sub in enumerate(sdp_vert_trans_subs):
         print("class"),
         print(str(i + 1) + ":"),
         print(c)
+
+    edge_equiv_classes_for_sub.append(class_list)
+
+############################## NEXT SECTION ##############################
+SECTION_SLEEP(2)
+SECTION("Matrix setup")
+
+for eec in edge_equiv_classes_for_sub:
+    multiplicity_matrix = hypers.get_multiplicity_matrix(eec)
+    print("Multipl. matrix for " + str(eec) + ":")
+    print(multiplicity_matrix)

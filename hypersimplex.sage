@@ -26,6 +26,27 @@ class Hypersimplex:
         return not self.__eq__(other)
 
     #
+    # TODOX
+    #
+    def get_multiplicity_matrix(self, equiv_classes):
+        ret = Matrix(QQ,len(self.graph.vertices))
+
+        def row_worker(i_v, v):
+            for i_w, w in enumerate(self.graph.vertices):
+                if i_v <= i_w:
+                    return
+                for c in equiv_classes:
+                    multipl = c.get_multiplicity()
+                    if Edge(v,w) in c:
+                        ret[i_v, i_w] = multipl
+                        ret[i_w, i_v] = multipl
+
+        for i_v, v in enumerate(self.graph.vertices):
+            row_worker(i_v, v)
+
+        return ret
+
+    #
     # private factory
     #
     def create_automorph_group(self, dim, par):

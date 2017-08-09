@@ -25,3 +25,6 @@ class Edge:
 
     def __contains__(self, vertex):
         return vertex == self.v or vertex == self.w
+
+    def __getitem__(self, key):
+        return [self.v, self.w][key]
