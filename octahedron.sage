@@ -40,12 +40,11 @@ SECTION("Automorphism group")
 
 s2Perm = SymmetricGroup(2)
 sDimPerm = GroupWrapper(SymmetricGroup(4), True)
-print("## Symmetric groups: ##")
+print("## Factors ##")
 print(u"S\u2082:"),
 print(s2Perm)
 print(u"S\u2084:"),
 print(sDimPerm)
-
 print
 
 print("## Semidirect product ##")
@@ -59,8 +58,9 @@ print("Group size:"),
 print(sdp.order())
 
 ############################## NEXT SECTION ##############################
-SECTION("Vertex-Automorphism connection")
+SECTION("Group generators as vertex permutations")
 
+# declare permutations
 def g_3456_vertex(vl): #input is vertex list
     return [vl[1], vl[2], vl[3], vl[0], vl[4], vl[5]]
 
@@ -73,6 +73,7 @@ def g_12_34_vertex(vl): #input is vertex list
 def g_3456_inverse_vertex(vl): #input is vertex list
     return [vl[3], vl[0], vl[1], vl[2], vl[4], vl[5]]
 
+# relate group generators to permutations
 def gen_to_perm_fct(generator):
     str_gen = str(generator)
 
@@ -91,7 +92,6 @@ def gen_to_perm_fct(generator):
 # define generator permutations on graph
 hypers.graph.set_generator_permutations(hypers.automorph_group, gen_to_perm_fct)
 
-print("On generators:")
 print("(1 2)(3 4):"),
 print(hypers.graph.generator_permutations[sdp[2]](hypers.graph.vertices))
 print("(3 4 5 6):"),
@@ -107,8 +107,9 @@ sdp_subs = sdp.subgroups()
 print("There are"),
 print(len(sdp_subs)),
 print("subgroups in total.")
-print
 
+############################## NEXT SECTION ##############################
+SECTION("Vertex transitive subgroups")
 ###
 ### calculating vertex transitive subgroups
 ###
@@ -132,7 +133,8 @@ SECTION_SLEEP(2)
 SECTION("Edge equivalence classes")
 
 for index_sub, sub in enumerate(sdp_vert_trans_subs):
-    print
+    if index_sub > 0:
+        print
     print("Subgroup " + str(index_sub+1) + ":"),
     print(sub.gens())
 
