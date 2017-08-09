@@ -146,6 +146,11 @@ class Graph:
     # TODOX
     #
     def vertex_factor_permutation(self, vertex_list, factor):
+        if factor not in self.generator_permutations:
+            # if the factor is not recognized
+            # we identify it as identity (and by that ignore it)
+            print("vertex_factor_permutation WARNING: Permutation factor " + str(factor) + " not recognized. Handled as identity!")
+            return vertex_list
         return self.generator_permutations[factor](vertex_list)
 
     #
@@ -159,8 +164,6 @@ class Graph:
     #
     def vertex_permutation(self, factorized_g):
         ret = self.vertices[:]
-        if (len(factorized_g) == 0 or factorized_g[0] == sdp[0]):
-            return ret
 
         for f in factorized_g:
             ret = self.vertex_factor_permutation(ret, f)
