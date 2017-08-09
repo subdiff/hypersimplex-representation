@@ -1,5 +1,5 @@
 # H(4,2) - Octahedron automorphism group
-import sys
+import sys, time, threading
 ##
 # TODO: This means that currently it's necessary that sage is run from the script's location
 load("edge.sage")
@@ -97,16 +97,30 @@ for sub in sdpSubs:
 print("There are"),
 print(len(sdpSubs)),
 print("subgroups in total.")
-
 print
-print("Calculating vertex transitive subgroups...\r"),
+
+### calculating vertex transitive subgroups
+wait_str = "Calculating vertex transitive subgroups"
+trans_calc_done = False
+def animate():
+    i = 0
+    while not trans_calc_done:
+        i = (i + 1)%3
+        sys.stdout.write("\r" + wait_str + "."*(i+1))
+        sys.stdout.write("\033[K")
+        time.sleep(0.5)
+
+t = threading.Thread(target=animate)
+t.start()
 
 sdpSubsVertTr = []
 for sub in sdpSubs:
     if (sub.is_vertex_transitiv(hypers.graph)):
         sdpSubsVertTr.append(sub)
+trans_calc_done = True
+###
 
-sys.stdout.write("\033[K")
+sys.stdout.write("\r\033[K")
 print("Found"),
 print(len(sdpSubsVertTr)),
 print("vertex transitive subgroups:")
