@@ -77,7 +77,7 @@ class GroupWrapper:
         v_list_hit = graph.vertices[:]
 
         for factored_g in self.get_factorizations():
-            img0 = graph.vertex_permutation(factored_g, self)[0]
+            img0 = graph.vertex_permutation(factored_g)[0]
             for v in v_list_hit:
                 if (img0 == v):
                     v_list_hit.remove(v)

@@ -125,7 +125,7 @@ for index_sub, sub in enumerate(sdpSubsVertTr):
 
     print("Permutations:")
     for g in sub:
-        print(hypers.graph.vertex_permutation(sub.get_factorization(g), sub))
+        print(hypers.graph.vertex_permutation(sub.get_factorization(g)))
 
     class_list = hypers.graph.get_edge_classes(sub)
     len_class_list = len(class_list)

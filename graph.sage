@@ -174,6 +174,6 @@ class Graph:
     #
     # Returns the permutated vertex list of the graph.
     #
-    def vertex_permutation(self, factorized_g, group_wrapper):
+    def vertex_permutation(self, factorized_g):
         return self.vertex_hom(factorized_g)
 
