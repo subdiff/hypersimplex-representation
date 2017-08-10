@@ -155,3 +155,17 @@ for sub_eec in hypers.edge_equiv_classes:
     print(gi_matrix.multiplicity_matrix)
     print("Resulting matrix:")
     print(gi_matrix.gi_matrix)
+
+    print("Eigenvectors:")
+    gi_matrix.calculate_eigenvectors()
+    for ev in gi_matrix.evs:
+        print(ev)
+
+    print("Nullspace repr:")
+    nspr = gi_matrix.get_nullspace_representation()
+    for v in nspr:
+        print v
+
+    P = Polyhedron(vertices = nspr)
+    print(P)
+#     P.show(viewer='tachyon')
