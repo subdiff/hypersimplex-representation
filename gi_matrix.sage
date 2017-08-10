@@ -78,10 +78,9 @@ class GIMatrix:
                 val = values[index]
             else:
                 val = (1 - vals_sum) / (multipl ** 2)
-
-            if val <= 0:
-                report_error(2)
-                return
+                if val < 0 or 1 < val:
+                    report_error(2)
+                    return
 
             vals.append(val)
             vals_sum += val * (multipl ** 2)
