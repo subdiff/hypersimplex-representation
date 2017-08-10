@@ -10,6 +10,7 @@ load("group_wrapper.sage")
 load("subgroup.sage")
 load("edge_equiv_class.sage")
 load("helpers.sage")
+load("gi_matrix.sage")
 ##
 
 # For development switch off
@@ -147,6 +148,6 @@ SECTION_SLEEP(2)
 SECTION("Matrix setup")
 
 for sub_eec in hypers.edge_equiv_classes:
-    multiplicity_matrix = hypers.get_multiplicity_matrix(sub_eec[1])
-    print("Multipl. matrix for " + str(sub_eec[0]) + ":")
-    print(multiplicity_matrix)
+    gi_matrix = hypers.get_gi_matrix(sub_eec[0])
+    print("Multipl. matrix for " + str(sub_eec[0].gens()) + ":")
+    print(gi_matrix.multiplicity_matrix)
