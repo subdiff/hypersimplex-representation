@@ -51,6 +51,8 @@ class GIMatrix:
             if code == 0:
                 print("set_eec_vars ERROR: Wrong count of values submitted on " + str(values) + ".")
             elif code == 1:
+                print("set_eec_vars ERROR: Variable values " + str(values) + " out of bounds.")
+            elif code == 1:
                 print("set_eec_vars ERROR: Values " + str(values) + " with multiplicities don't sum up to one.")
 
         len_target = len(self.edge_equiv_classes)
@@ -61,6 +63,11 @@ class GIMatrix:
         if len(values) != len_target - 1:
             report_error(0)
             return
+
+        for v in values:
+            if v < 0 or 1 < v:
+                report_error(1)
+                return
 
         vals = []
         vals_sum = 0
@@ -73,7 +80,7 @@ class GIMatrix:
                 val = (1 - vals_sum) / (multipl ** 2)
 
             if val <= 0:
-                report_error(1)
+                report_error(2)
                 return
 
             vals.append(val)
