@@ -7,9 +7,38 @@ class GIMatrix:
         self.edge_equiv_classes = class_list
         self.dimension = len(hypersimplex.graph.vertices)
 
+        self.gi_matrix = Matrix(RDF,self.dimension)
         self.variables = self.set_variables_defaults()
 
+        # not used in calculations
         self.multiplicity_matrix = self.create_multiplicity_matrix()
+
+    #
+    # TODOX
+    #
+    def calculate_gi_matrix(self):
+        def cell_value(edge):
+            for i_eec, eec in enumerate(self.edge_equiv_classes):
+                if edge in eec:
+                    return eec.get_multiplicity() * self.variables[i_eec]
+            # edge not in graph
+            return 0
+        def row_worker(row):
+            row_vertex = self.hypersimplex.graph.vertices[row]
+            for col in range(self.dimension):
+                if row == col:
+                    # reached the diagonal, set it to 0 and return
+                    self.gi_matrix[row, col] = 0
+                    return
+
+                col_vertex = self.hypersimplex.graph.vertices[col]
+                val = cell_value(Edge(row_vertex, col_vertex))
+                # symmetrical matrix
+                self.gi_matrix[row, col] = val
+                self.gi_matrix[col, row] = val
+
+        for row in range(self.dimension):
+            row_worker(row)
 
     #
     # TODOX
@@ -51,6 +80,7 @@ class GIMatrix:
             vals_sum += val * (multipl ** 2)
 
         self.variables = vals
+        self.calculate_gi_matrix()
 
     #
     # TODOX
@@ -61,6 +91,7 @@ class GIMatrix:
             multipl = eec.get_multiplicity()
             vals.append(1 / multipl / self.hypersimplex.graph.degree)
         self.variables = vals
+        self.calculate_gi_matrix()
         return self.variables
 
     #

@@ -153,3 +153,5 @@ for sub_eec in hypers.edge_equiv_classes:
     gi_matrix = hypers.get_gi_matrix(sub_eec[0])
     print("Multipl. matrix for " + str(sub_eec[0].gens()) + ":")
     print(gi_matrix.multiplicity_matrix)
+    print("Resulting matrix:")
+    print(gi_matrix.gi_matrix)
