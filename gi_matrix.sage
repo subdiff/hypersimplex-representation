@@ -114,7 +114,7 @@ class GIMatrix:
         multipl_highest_ev = all_evs[0][2]
 
         for index in range(self.hypersimplex.dim - 1):
-            evs.append(all_evs[index + multipl_highest_ev])
+            evs.append(all_evs[index + multipl_highest_ev][1])
 
         self.evs = evs
         return self.evs
