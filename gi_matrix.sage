@@ -114,10 +114,23 @@ class GIMatrix:
         multipl_highest_ev = all_evs[0][2]
 
         for index in range(self.hypersimplex.dim - 1):
-            evs.append(all_evs[index + multipl_highest_ev][1])
+            evs.append(all_evs[index + multipl_highest_ev][1][0])
 
         self.evs = evs
         return self.evs
+
+    #
+    # TODOX
+    #
+    def get_nullspace_representation(self):
+        vertices = []
+        for index in range(self.dimension):
+            vector_list = []
+            for ev in self.evs:
+                vector_list.append(ev[index])
+            vertices.append(vector(vector_list))
+
+        return vertices
 
     #
     # private factory
