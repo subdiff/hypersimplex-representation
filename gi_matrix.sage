@@ -10,6 +10,9 @@ class GIMatrix:
         self.gi_matrix = Matrix(RDF,self.dimension)
         self.variables = self.set_variables_defaults()
 
+        # list of eigenvectors for 2nd highest eigenvalue
+        self.evs = []
+
         # not used in calculations
         self.multiplicity_matrix = self.create_multiplicity_matrix()
 
@@ -104,8 +107,17 @@ class GIMatrix:
     # TODOX
     #
     def calculate_eigenvectors(self):
-        return
+        evs = []
+        all_evs = self.gi_matrix.eigenvectors_right()
+        all_evs.sort(reverse=True)
 
+        multipl_highest_ev = all_evs[0][2]
+
+        for index in range(self.hypersimplex.dim - 1):
+            evs.append(all_evs[index + multipl_highest_ev])
+
+        self.evs = evs
+        return self.evs
 
     #
     # private factory
