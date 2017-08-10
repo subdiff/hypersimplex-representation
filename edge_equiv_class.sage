@@ -29,6 +29,9 @@ class EdgeEquivClass:
         # non-equality test
         return not self.__eq__(other)
 
+    def __len__(self):
+        return len(self.edges)
+
     def __getitem__(self, key):
         return self.edges[key]
 

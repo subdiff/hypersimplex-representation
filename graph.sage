@@ -1,4 +1,4 @@
-# A graph without loops.
+# A regular graph without loops.
 class Graph:
 
     def __init__(self, vertex_list, edge_list, edges_are_missing_links = None):
@@ -26,6 +26,8 @@ class Graph:
                     self.edges.append(e)
         else:
             self.edges = edge_list[:]
+
+        self.degree = len(self.get_edges_to_vertex(self.vertices[0]))
 
         self.generator_permutations = {}
 

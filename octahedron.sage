@@ -18,7 +18,9 @@ load("gi_matrix.sage")
 DEV_BUILD = True
 
 if DEV_BUILD:
+    # wait in between sections for few seconds
     SECTION_WAIT = False
+    # skip long computations by using single samples
     QUICK_TEST = False
 
 #################
